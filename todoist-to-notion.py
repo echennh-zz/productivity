@@ -1,6 +1,20 @@
 import todoist # need to install todoist-python
 import os
+import requests
 # also need to install notion-client
+
+# Text parsing begin #
+import datetime
+from recurrent.event_parser import RecurringEvent
+r = RecurringEvent(now_date=datetime.date.today())
+
+def parse_date_from_text(dueString):
+    recurrent_str = r.parse(dueString)
+    # I guess, I want to get the next 7 occurences to start, and I can expand upon this later
+    # I can install python_dateutil, and feed it the rrules string recurrent_str, and get the next dates
+    return recurrent_str
+
+# Text parsing end #
 
 # You need the title of your Notion Dashboard to be "Task"
 # You need a date column of your Notion Dashboard to be "Date"
@@ -14,8 +28,6 @@ database_id = 'cab6c589038043fcb63eda33fb5034d5' #get the mess of numbers and le
 
 api = todoist.TodoistAPI(TODOIST_API_KEY)
 api.sync()
-
-import requests
 
 resultList=requests.get(
     "https://api.todoist.com/rest/v1/tasks",
@@ -42,9 +54,16 @@ for result in resultList:
     print("\n")
 
     taskName = result['content']
-    dueDate = result.get('due')
-    if dueDate:
-        dueDate = dueDate.get('date')
+    dueBlock = result.get('due')
+    if dueBlock:
+        dueDate = dueBlock.get('date')
+        recur = dueBlock.get('recurring')
+        if recur:
+            print(f"due date string from todoist: {dueBlock.get('string')}")
+            rrules_str = parse_date_from_text(dueBlock.get('string'))
+            print(f'RRULES string: {rrules_str}')
+            # What I want, is to pass dueBlock.get('String') to another function, which I'lld define earlier in the file
+
 
     parent = {"database_id": database_id}
     task_prop = {
