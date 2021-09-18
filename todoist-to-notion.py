@@ -92,7 +92,7 @@ for result in resultList:
     #                     }],
     #                 }
 
-    if dueDate: # if there is a date:
+    if dueBlock: # if there is a date:
         properties = {"Task": task_prop, "Due Date": date_prop}
     else:
         properties = {"Task": task_prop}
