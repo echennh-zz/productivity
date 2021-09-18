@@ -63,6 +63,8 @@ for result in resultList:
             rrules_str = parse_date_from_text(dueBlock.get('string'))
             print(f'RRULES string: {rrules_str}')
             # What I want, is to pass dueBlock.get('String') to another function, which I'lld define earlier in the file
+    else:
+        dueDate = ''
 
 
     parent = {"database_id": database_id}
